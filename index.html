@@ -48,9 +48,9 @@
           : '🌐';
 
         const output = [
-          `您来自 ${flag},${city}`,
-          `IP: ${ip}`,
-          `运营商: ${org}`
+          `您来自 ${flag}${city}`,
+          `${ip}`,
+          `${org}`
         ].join('\n');
 
         document.getElementById('info').innerText = output;
