@@ -19,7 +19,7 @@
       background: #f9f9f9;
       padding: 10px;
       border-radius: 6px;
-      text-align: left;
+      text-align: center;
     }
   </style>
 </head>
@@ -48,8 +48,7 @@
           : '🌐';
 
         const output = [
-          `您来自 ${flag}`,
-          `城市: ${city}`,
+          `您来自 ${flag}`,`${city}`,
           `IP: ${ip}`,
           `运营商: ${org}`
         ].join('\n');
