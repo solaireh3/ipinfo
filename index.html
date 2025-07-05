@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <title>访客信息</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      margin: 0;
+      padding: 10px;
+      background: #fff;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+<div id="info">正在获取信息...</div>
+
+<script>
+  const token = "93a004dbe0e145";  // ipinfo.io token
+
+  function countryFlagEmoji(countryCode) {
+    return countryCode.replace(/./g, c =>
+      String.fromCodePoint(c.charCodeAt(0) + 127397)
+    );
+  }
+
+  fetch(`https://ipinfo.io?token=${token}`)
+    .then(res => res.json())
+    .then(data => {
+      const ip = data.ip;
+      const city = data.city || '';
+      const countryCode = data.country || '';
+      const org = data.org || '';
+      const flag = countryCode.length === 2
+        ? countryFlagEmoji(countryCode)
+        : '🌐';
+
+      const html = `
+        现在为您提供服务的服务器是 ${flag} 城市: ${city}，IP: ${window.location.hostname}，运营商: Cloudflare, Inc.<br/>
+        您来自 ${flag} 城市: ${city}，IP: ${ip}，运营商: ${org}
+      `;
+      document.getElementById('info').innerHTML = html;
+    })
+    .catch(error => {
+      console.error(error);
+      document.getElementById('info').innerText = "获取 IP 信息失败";
+    });
+</script>
+</body>
+</html>
