@@ -24,25 +24,44 @@
   </style>
 </head>
 <body>
-<div id="info" class="ip-info">正在获取信息...</div>
-<script>
-fetch("https://www.cloudflare.com/cdn-cgi/trace")
-  .then(res => res.text())
-  .then(text => {
-    const data = Object.fromEntries(
-      text.trim().split('\n').map(line => line.split('='))
-    );
+  <div id="info" class="ip-info">正在获取信息...</div>
 
-    const ip = data.ip || '未知';
-    const colo = data.colo || '未知';
+  <script>
+    const token = "93a004dbe0e145"; // ipinfo.io token
 
-    document.getElementById('info').innerText =
-      `您的 IP: ${ip}\nCloudflare 节点: ${colo}`;
-  })
-  .catch(error => {
-    console.error(error);
-    document.getElementById('info').innerText = "获取 IP 信息失败";
-  });
-</script>
+    function countryFlagEmoji(countryCode) {
+      return countryCode.replace(/./g, c =>
+        String.fromCodePoint(c.charCodeAt(0) + 127397)
+      );
+    }
+
+    fetch(`https://ipinfo.io?token=${token}`)
+      .then(res => {
+        if (!res.ok) throw new Error("请求失败，状态码：" + res.status);
+        return res.json();
+      })
+      .then(data => {
+        const ip = data.ip || '未知';
+        const city = data.city || '未知';
+        const country = data.country || '';
+        const org = data.org || '未知运营商';
+
+        const flag = country.length === 2
+          ? countryFlagEmoji(country)
+          : '🌐';
+
+        const output = [
+          `🌍 您来自: ${flag} ${country} · ${city}`,
+          `📡 IP地址: ${ip}`,
+          `🏢 运营商: ${org}`
+        ].join('\n');
+
+        document.getElementById('info').innerText = output;
+      })
+      .catch(error => {
+        console.error("IP信息获取失败：", error);
+        document.getElementById('info').innerText = "⚠️ 无法获取您的IP信息，请稍后再试";
+      });
+  </script>
 </body>
 </html>
