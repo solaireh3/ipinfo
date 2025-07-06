@@ -27,7 +27,7 @@
   <div id="info" class="ip-info">正在获取信息...</div>
 
   <script>
-    const token = "93a004dbe0e145"; // ipinfo.io 的 token
+    const token = "93a004dbe0e145"; // ipinfo.io token
 
     function countryFlagEmoji(countryCode) {
       return countryCode.replace(/./g, c =>
@@ -36,7 +36,10 @@
     }
 
     fetch(`https://ipinfo.io?token=${token}`)
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error("请求失败，状态码：" + res.status);
+        return res.json();
+      })
       .then(data => {
         const ip = data.ip || '未知';
         const city = data.city || '未知';
@@ -48,16 +51,16 @@
           : '🌐';
 
         const output = [
-          `您来自 ${flag}${city}`,
-          `${ip}`,
-          `${org}`
+          `🌍 您来自: ${flag} ${country} · ${city}`,
+          `📡 IP地址: ${ip}`,
+          `🏢 运营商: ${org}`
         ].join('\n');
 
         document.getElementById('info').innerText = output;
       })
       .catch(error => {
-        console.error(error);
-        document.getElementById('info').innerText = "获取 IP 信息失败";
+        console.error("IP信息获取失败：", error);
+        document.getElementById('info').innerText = "⚠️ 无法获取您的IP信息，请稍后再试";
       });
   </script>
 </body>
