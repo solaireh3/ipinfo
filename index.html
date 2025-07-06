@@ -6,7 +6,7 @@
   <style>
     body {
       font-family: "Segoe UI", sans-serif;
-      font-size: 13px;
+      font-size: 14px;
       color: #444;
       line-height: 1.8;
       margin: 0;
@@ -27,7 +27,7 @@
   <div id="info" class="ip-info">正在获取信息...</div>
 
   <script>
-    const token = "93a004dbe0e145"; // ipinfo.io token
+    const proxyUrl = "https://ipinfo.supremehewhyplain.workers.dev/";
 
     function countryFlagEmoji(countryCode) {
       return countryCode.replace(/./g, c =>
@@ -35,16 +35,16 @@
       );
     }
 
-    fetch(`https://ipinfo.io?token=${token}`)
+    fetch(proxyUrl)
       .then(res => {
-        if (!res.ok) throw new Error("请求失败，状态码：" + res.status);
+        if (!res.ok) throw new Error("状态码：" + res.status);
         return res.json();
       })
       .then(data => {
         const ip = data.ip || '未知';
         const city = data.city || '未知';
         const country = data.country || '';
-        const org = data.org || '未知运营商';
+        const org = data.org || '未知';
 
         const flag = country.length === 2
           ? countryFlagEmoji(country)
@@ -52,15 +52,15 @@
 
         const output = [
           `🌍 您来自: ${flag} ${country} · ${city}`,
-          `📡 IP地址: ${ip}`,
+          `📡 IP: ${ip}`,
           `🏢 运营商: ${org}`
         ].join('\n');
 
         document.getElementById('info').innerText = output;
       })
       .catch(error => {
-        console.error("IP信息获取失败：", error);
-        document.getElementById('info').innerText = "⚠️ 无法获取您的IP信息，请稍后再试";
+        console.error("获取 IP 失败：", error);
+        document.getElementById('info').innerText = "⚠️ 无法获取您的 IP 信息";
       });
   </script>
 </body>
