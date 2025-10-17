@@ -5,26 +5,32 @@
   <title>访客信息</title>
   <style>
     body {
-      font-family: "Segoe UI", "PingFang SC", sans-serif;
+      font-family: "Segoe UI", sans-serif;
       font-size: 14px;
+      color: #444;
       line-height: 1.8;
       margin: 0;
       padding: 12px;
-      background: transparent;
-      color: inherit;
-      text-align: center;
+      background: #fff;
+    }
+    .ip-info {
       white-space: pre-line;
+      border: 1px solid #eee;
+      background: #f9f9f9;
+      padding: 10px;
+      border-radius: 6px;
+      text-align: center;
     }
   </style>
 </head>
 <body>
-  <div id="info">正在获取信息...</div>
+  <div id="info" class="ip-info">正在获取信息...</div>
 
   <script>
     const proxyUrl = "https://ipinfo.xxxh.de/";
 
-    function countryFlagEmoji(code) {
-      return code.replace(/./g, c =>
+    function countryFlagEmoji(countryCode) {
+      return countryCode.replace(/./g, c =>
         String.fromCodePoint(c.charCodeAt(0) + 127397)
       );
     }
@@ -39,16 +45,22 @@
         const city = data.city || '未知';
         const country = data.country || '';
         const org = data.org || '未知';
-        const flag = country.length === 2 ? countryFlagEmoji(country) : '🌐';
 
-        document.getElementById("info").innerText =
-`🌍 您来自: ${flag} ${country} · ${city}
-📡 IP: ${ip}
-🏢 运营商: ${org}`;
+        const flag = country.length === 2
+          ? countryFlagEmoji(country)
+          : '🌐';
+
+        const output = [
+          `🌍 您来自: ${flag} ${country} · ${city}`,
+          `📡 IP: ${ip}`,
+          `🏢 运营商: ${org}`
+        ].join('\n');
+
+        document.getElementById('info').innerText = output;
       })
-      .catch(err => {
-        console.error("获取 IP 失败：", err);
-        document.getElementById("info").innerText = "⚠️ 无法获取您的 IP 信息";
+      .catch(error => {
+        console.error("获取 IP 失败：", error);
+        document.getElementById('info').innerText = "⚠️ 无法获取您的 IP 信息";
       });
   </script>
 </body>
